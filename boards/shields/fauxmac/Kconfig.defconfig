@@ -1,0 +1,6 @@
+if SHIELD_FAUXMAC
+
+config ZMK_KEYBOARD_NAME
+    default "Fauxmac"
+
+endif

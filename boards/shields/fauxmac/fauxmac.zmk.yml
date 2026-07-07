@@ -1,0 +1,10 @@
+file_format: "1"
+id: fauxmac
+name: Fauxmac
+type: shield
+url: https://mechboards.co.uk/products/romac-macro-pad
+requires:
+  - nice_nano_v2
+features:
+  - keys
+  - encoder
