@@ -21,10 +21,10 @@
         default_layer {
             display-name = "MACROS";
             bindings = <
-                &kp C_PREV        &none        &kp C_NEXT
+                &kp N7            &kp N8       &kp N9
                 &kp LG(C)         &kp LG(V)    &kp LG(X)
                 &kp LG(Z)         &kp LG(LS(N3)) &kp LA(SPACE)
-                &tog 1            &kp C_MUTE   &kp C_PP
+                &tog 1            &kp N0       &kp N1
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
@@ -33,13 +33,13 @@
         dev_layer {
             display-name = "DEV";
             bindings = <
-                &kp LG(LS(B))     &none        &kp F5
+                &kp C_PREV        &none        &kp C_NEXT
                 &kp LG(LS(Z))     &kp LG(S)    &kp LG(GRAVE)
                 &kp LA(SPACE)     &kp LG(TAB)  &kp LG(W)
-                &tog 1            &trans       &kp LG(Q)
+                &tog 1            &kp C_MUTE   &kp C_PP
             >;
 
-            sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
     };
 };
