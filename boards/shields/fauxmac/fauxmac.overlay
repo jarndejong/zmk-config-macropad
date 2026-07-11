@@ -3,37 +3,36 @@
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
 
 /*
- * OLED I2C: D4/C6 footprint holes → P0.22 (SDA) / P0.24 (SCL).
+ * Fauxmac pin map (your silkscreen, USB up, chip facing you):
  *
- * OLED TEST MODE (active below): matrix rows 0/1 use pro_micro 6/7 so those
- * GPIOs are not driven by the key scanner. Top 6 keys will not work; bottom
- * row + encoder should still work. Expect layer/battery/USB on the OLED.
+ *   RIGHT column (bottom → top):
+ *     D3 → row 3    pro_micro 0   (P0.08)  ← also OLED SCL (PD0)
+ *     D2 → row 2    pro_micro 1   (P0.06)  ← also OLED SDA (PD1)
+ *     D1 → OLED SDA
+ *     D0 → OLED SCL
+ *     D4 → row 1    pro_micro 4   (P0.22)
+ *     C6 → row 0    pro_micro 5   (P0.24)
  *
- * OPTION 3 — try row mappings yourself:
- *   File: boards/shields/fauxmac/fauxmac.overlay
- *   Block: kscan0 → row-gpios (near bottom of this file)
+ *   OLED I2C is on D0/D1 = P0.08 (SCL) + P0.06 (SDA) per PCB schematic.
+ *   Rows 0/1 (pm 5/4) do NOT conflict with OLED.
+ *   Rows 2/3 (pm 0/1) DO conflict with OLED — same physical pins.
  *
- *   Mapping A (active, OLED test):  rows 0/1 = pro_micro 6, 7
- *   Mapping B (keys only, no OLED): rows 0/1 = pro_micro 5, 4
- *
- *   To test both keys + OLED: flash Mapping A, check OLED. Then press each
- *   top-row key — if they work, your PCB routes D6/D7 to the same matrix
- *   lines as C6/D4 and Mapping A is your permanent fix. If top keys are
- *   dead, Mapping B is keys-only; you cannot have OLED + top rows together
- *   on this pinout without hardware changes.
+ *   OLED TEST MODE (active): rows 2/3 moved to pm 6/7 so I2C can use pm 0/1.
+ *   Top 6 keys should work; bottom 6 + encoder click will not.
  */
+
 &pinctrl {
     i2c0_default: i2c0_default {
         group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 0, 22)>,
-                    <NRF_PSEL(TWIM_SCL, 0, 24)>;
+            psels = <NRF_PSEL(TWIM_SDA, 0, 6)>,
+                    <NRF_PSEL(TWIM_SCL, 0, 8)>;
         };
     };
 
     i2c0_sleep: i2c0_sleep {
         group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 0, 22)>,
-                    <NRF_PSEL(TWIM_SCL, 0, 24)>;
+            psels = <NRF_PSEL(TWIM_SDA, 0, 6)>,
+                    <NRF_PSEL(TWIM_SCL, 0, 8)>;
             low-power-enable;
         };
     };
@@ -73,20 +72,20 @@
         debounce-press-ms = <10>;
         debounce-release-ms = <10>;
 
-        /* Mapping A — OLED test (active): rows 0/1 off I2C pins */
+        /* ACTIVE — OLED test: rows 2/3 off OLED pins, rows 0/1 unchanged */
         row-gpios
             = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
 
-        /* Mapping B — working keys, conflicts with OLED (swap with A to try):
+        /* COMMENTED OUT — all keys working, OLED disabled (conflict on rows 2/3):
         row-gpios
-            = <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
         */
 
