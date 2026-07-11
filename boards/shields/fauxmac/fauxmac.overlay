@@ -3,8 +3,24 @@
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
 
 /*
- * OLED I2C uses the D4/C6 footprint holes (P0.22 / P0.24).
- * Matrix rows 0/1 use pro_micro 5/4 (your working pinout).
+ * OLED I2C: D4/C6 footprint holes → P0.22 (SDA) / P0.24 (SCL).
+ *
+ * OLED TEST MODE (active below): matrix rows 0/1 use pro_micro 6/7 so those
+ * GPIOs are not driven by the key scanner. Top 6 keys will not work; bottom
+ * row + encoder should still work. Expect layer/battery/USB on the OLED.
+ *
+ * OPTION 3 — try row mappings yourself:
+ *   File: boards/shields/fauxmac/fauxmac.overlay
+ *   Block: kscan0 → row-gpios (near bottom of this file)
+ *
+ *   Mapping A (active, OLED test):  rows 0/1 = pro_micro 6, 7
+ *   Mapping B (keys only, no OLED): rows 0/1 = pro_micro 5, 4
+ *
+ *   To test both keys + OLED: flash Mapping A, check OLED. Then press each
+ *   top-row key — if they work, your PCB routes D6/D7 to the same matrix
+ *   lines as C6/D4 and Mapping A is your permanent fix. If top keys are
+ *   dead, Mapping B is keys-only; you cannot have OLED + top rows together
+ *   on this pinout without hardware changes.
  */
 &pinctrl {
     i2c0_default: i2c0_default {
@@ -57,13 +73,22 @@
         debounce-press-ms = <10>;
         debounce-release-ms = <10>;
 
-        /* Rows: footprint holes per your working pinout */
+        /* Mapping A — OLED test (active): rows 0/1 off I2C pins */
+        row-gpios
+            = <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            ;
+
+        /* Mapping B — working keys, conflicts with OLED (swap with A to try):
         row-gpios
             = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
+        */
 
         /* Cols: PF6, PF5, PF4 */
         col-gpios
