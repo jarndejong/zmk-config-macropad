@@ -15,16 +15,6 @@
  */
 
 / {
-    macros {
-        open_terminal: open_terminal {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <200>;
-            tap-ms = <30>;
-            bindings = <&kp LG(SPACE) &kp T &kp RET>;
-        };
-    };
-
     keymap {
         compatible = "zmk,keymap";
 
@@ -33,7 +23,7 @@
             bindings = <
                 &kp C_PREV        &none        &kp C_NEXT
                 &kp LG(C)         &kp LG(V)    &kp LG(X)
-                &kp LG(Z)         &kp LG(LS(N3)) &macro open_terminal
+                &kp LG(Z)         &kp LG(LS(N3)) &kp LA(SPACE)
                 &tog 1            &kp C_MUTE   &kp C_PP
             >;
 

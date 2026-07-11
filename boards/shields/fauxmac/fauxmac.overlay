@@ -4,8 +4,7 @@
 
 /*
  * OLED I2C uses the D4/C6 footprint holes (P0.22 / P0.24).
- * Matrix rows 0/1 use the D7/E6 holes (pro_micro 6/7) so they
- * do not share pins with the display bus.
+ * Matrix rows 0/1 use pro_micro 5/4 (your working pinout).
  */
 &pinctrl {
     i2c0_default: i2c0_default {
@@ -22,15 +21,6 @@
             low-power-enable;
         };
     };
-};
-
-&i2c0 {
-    compatible = "nordic,nrf-twi";
-    status = "okay";
-    pinctrl-0 = <&i2c0_default>;
-    pinctrl-1 = <&i2c0_sleep>;
-    pinctrl-names = "default", "sleep";
-    clock-frequency = <I2C_BITRATE_FAST>;
 };
 
 &uart0 {
@@ -67,13 +57,10 @@
         debounce-press-ms = <10>;
         debounce-release-ms = <10>;
 
-        /* Rows: C6, D4, D2, D3 via remapped footprint holes.
-         * Rows 0/1 use D7/E6 holes (pm 6/7) so OLED can use D4/C6 holes (pm 4/5).
-         * If the top two rows stop working after enabling OLED, try swapping
-         * rows 0/1 back to pro_micro 5 and 4 (your earlier working values). */
+        /* Rows: footprint holes per your working pinout */
         row-gpios
-            = <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
