@@ -3,22 +3,21 @@
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
 
 /*
- * Fauxmac pin map (your silkscreen, USB up, chip facing you):
+ * Fauxmac pin map (silkscreen, USB up, chip facing you):
  *
  *   RIGHT column (bottom → top):
- *     D3 → row 3    pro_micro 0   (P0.08)  ← also OLED SCL (PD0)
- *     D2 → row 2    pro_micro 1   (P0.06)  ← also OLED SDA (PD1)
- *     D1 → OLED SDA
- *     D0 → OLED SCL
+ *     D3 → row 3    pro_micro 0   (P0.08)  ← OLED SCL (PD0)
+ *     D2 → row 2    pro_micro 1   (P0.06)  ← OLED SDA (PD1)
  *     D4 → row 1    pro_micro 4   (P0.22)
  *     C6 → row 0    pro_micro 5   (P0.24)
  *
- *   OLED I2C is on D0/D1 = P0.08 (SCL) + P0.06 (SDA) per PCB schematic.
- *   Rows 0/1 (pm 5/4) do NOT conflict with OLED.
- *   Rows 2/3 (pm 0/1) DO conflict with OLED — same physical pins.
+ *   OLED I2C: SDA = P0.06, SCL = P0.08 (D1/D0 holes on PCB).
+ *   Rows 2/3 and OLED share pro_micro 0/1 — cannot both work at once.
  *
- *   OLED TEST MODE (active): rows 2/3 moved to pm 6/7 so I2C can use pm 0/1.
- *   Top 6 keys should work; bottom 6 + encoder click will not.
+ *   ACTIVE below: all 12 keys (rows 2/3 on pm 0/1). OLED will not work.
+ *
+ *   To test OLED: comment out ACTIVE block, uncomment OLED TEST block.
+ *   OLED test frees pm 0/1 by moving rows 2/3 to pm 6/7 (bottom row dies).
  */
 
 &pinctrl {
@@ -72,20 +71,20 @@
         debounce-press-ms = <10>;
         debounce-release-ms = <10>;
 
-        /* ACTIVE — OLED test: rows 2/3 off OLED pins, rows 0/1 unchanged */
-        row-gpios
-            = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            ;
-
-        /* COMMENTED OUT — all keys working, OLED disabled (conflict on rows 2/3):
+        /* ACTIVE — all keys working (OLED blocked by pin conflict) */
         row-gpios
             = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            ;
+
+        /* OLED TEST — comment out ACTIVE above, uncomment this block:
+        row-gpios
+            = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
         */
 

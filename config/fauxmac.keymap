@@ -4,14 +4,13 @@
 /*
  * 4x3 grid (USB at top):
  *
- *   [ Prev ] [ ---- ] [ Next ]   row 0  media
- *   [ Copy ] [ Paste] [ Cut  ]   row 1  clipboard
- *   [ Undo ] [ Shot ] [ Term ]   row 2  productivity
- *   [ TOG  ] [ Mute ] [ Play ]   row 3  encoder click toggles layer
+ *   [ 7 ] [ 8 ] [ 9 ]
+ *   [ 4 ] [ 5 ] [ 6 ]
+ *   [ 1 ] [ 2 ] [ 3 ]
+ *   [TOG] [ 0 ] [ . ]
  *
- * Encoder: volume on layer 0, scroll on layer 1
- *
- * Edit bindings in this file. Layer toggle is &tog 1 on bottom-left (encoder click).
+ * Layer 0 = numpad (debug). Layer 1 = macros/dev.
+ * Encoder click (bottom-left) toggles layer.
  */
 
 / {
@@ -19,12 +18,12 @@
         compatible = "zmk,keymap";
 
         default_layer {
-            display-name = "MACROS";
+            display-name = "NUMPAD";
             bindings = <
                 &kp N7            &kp N8       &kp N9
-                &kp LG(C)         &kp LG(V)    &kp LG(X)
-                &kp LG(Z)         &kp LG(LS(N3)) &kp LA(SPACE)
-                &tog 1            &kp N0       &kp N1
+                &kp N4            &kp N5       &kp N6
+                &kp N1            &kp N2       &kp N3
+                &tog 1            &kp N0       &kp DOT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
@@ -34,12 +33,12 @@
             display-name = "DEV";
             bindings = <
                 &kp C_PREV        &none        &kp C_NEXT
-                &kp LG(LS(Z))     &kp LG(S)    &kp LG(GRAVE)
-                &kp LA(SPACE)     &kp LG(TAB)  &kp LG(W)
+                &kp LG(C)         &kp LG(V)    &kp LG(X)
+                &kp LG(Z)         &kp LG(LS(N3)) &kp LA(SPACE)
                 &tog 1            &kp C_MUTE   &kp C_PP
             >;
 
-            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+            sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
         };
     };
 };
