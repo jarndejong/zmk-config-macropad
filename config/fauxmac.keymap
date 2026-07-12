@@ -32,10 +32,10 @@
         default_layer {
             display-name = "DEV";
             bindings = <
-                &kp LGUI_GRAVE    &kp LS(LGUI_P)    &kp LS(LGUI_A)
-                &kp LCTRL_LALT(L) &kp LCTRL_LALT(T) &kp LCTRL_LALT(P)
-                &kp F8            &kp LS(F8)        &kp LS(LALT_F)
-                &lt 0 C_MUTE      &mo 0             &kp ENTER
+                &kp LC(GRAVE)     &kp LG(P)         &kp LG(LS(P))
+                &kp LC(LA(L))     &kp LC(LA(T))     &kp LC(LA(P))
+                &kp LA(LS(F))     &kp LA(UP)        &kp LA(DOWN)
+                &lt 0 C_MUTE      &kp F8            &kp LS(F8)
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
