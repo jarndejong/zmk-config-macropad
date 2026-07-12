@@ -2,31 +2,10 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
 
-/*
- * Fauxmac / nice!nano pin reference (from PCB + your working key tests):
- *
- *   Signal          QMK/PCB    pro_micro    nRF GPIO
- *   row 0           C6         5            P0.24
- *   row 1           D4         4            P0.22
- *   row 2           D2         1            P0.06  (D1 footprint hole)
- *   row 3           D3         0            P0.08  (D0 footprint hole)
- *   OLED SDA        PD1        1            P0.06  same as row 2
- *   OLED SCL        PD0        0            P0.08  same as row 3
- *
- *   Rows 2/3 and OLED share pro_micro 0/1 — only one can use those pins.
- *
- *   Pick ONE row-gpios block below (comment out the other).
- *
- *   A) ALL KEYS (default) — rows 2/3 on pm 0/1, OLED off
- *   B) OLED TEST — rows 2/3 on pm 6/7, matrix freed from I2C pins
- *   C) TRY BOTH — rows 2/3 on pm 2/3 (standard QMK D2/D3 holes), OLED on pm 0/1
- *      Test if bottom row still works; if yes, this gives keys + OLED together.
- */
 
 / {
     chosen {
         zephyr,display = &oled;
-        zmk,kscan = &kscan0;
         zmk,matrix-transform = &default_transform;
     };
 
@@ -41,7 +20,7 @@
             RC(3,0) RC(3,1) RC(3,2)
         >;
     };
-
+/*
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
         diode-direction = "col2row";
@@ -49,40 +28,20 @@
         debounce-press-ms = <10>;
         debounce-release-ms = <10>;
 
-        /* A) ALL KEYS — your working mapping
         row-gpios
             = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
-        */
-        /* B) OLED TEST — comment out A, uncomment this: */
-        row-gpios
-            = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            ;
-        
 
-        /* C) TRY KEYS + OLED — comment out A, uncomment this:
-        row-gpios
-            = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            ;
-        */
-
-        /* Cols: PF6, PF5, PF4 */
         col-gpios
             = <&pro_micro 19 GPIO_ACTIVE_HIGH>
             , <&pro_micro 20 GPIO_ACTIVE_HIGH>
             , <&pro_micro 21 GPIO_ACTIVE_HIGH>
             ;
     };
-
+*/
     left_encoder: encoder {
         compatible = "alps,ec11";
         a-gpios = <&pro_micro 14 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
@@ -103,7 +62,7 @@
 
     oled: ssd1306@3c {
         compatible = "solomon,ssd1306fb";
-        reg = <0x3d>;
+        reg = <0x3c>;
         width = <128>;
         height = <32>;
         segment-offset = <0>;
@@ -112,7 +71,6 @@
         multiplex-ratio = <31>;
         segment-remap;
         com-invdir;
-        com-sequential;
         prechargep = <0x22>;
     };
 };
