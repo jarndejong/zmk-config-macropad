@@ -92,14 +92,10 @@
         display-offset = <0>;
         multiplex-ratio = <31>;
         /* Active: matches murphpad / knob_goblin — try alternates below if skewed  */
-        /* segment-remap;  */
+        segment-remap;
         com-invdir;
         com-sequential;
         inversion-on;
-        prechargep = <0x22>;
-        
-
-        /* Alt B — no remap: comment out active flags above, use only:
         prechargep = <0x22>;
         */
     };
