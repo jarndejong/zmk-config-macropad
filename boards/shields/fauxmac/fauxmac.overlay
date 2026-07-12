@@ -23,7 +23,7 @@
  *      Test if bottom row still works; if yes, this gives keys + OLED together.
  */
 
-&pinctrl {
+/* &pinctrl {
     /* Move UART off P0.06/P0.08 so I2C can use the OLED pins */
     uart0_default: uart0_default {
         group1 {
@@ -71,6 +71,7 @@
 &i2c0 {
     status = "okay";
 };
+*/
 
 / {
     chosen {
@@ -152,7 +153,7 @@
 
     oled: ssd1306@3c {
         compatible = "solomon,ssd1306fb";
-        reg = <0x3c>;
+        reg = <0x3d>;
         width = <128>;
         height = <32>;
         segment-offset = <0>;
