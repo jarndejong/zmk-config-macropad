@@ -23,56 +23,6 @@
  *      Test if bottom row still works; if yes, this gives keys + OLED together.
  */
 
-/* &pinctrl {
-    /* Move UART off P0.06/P0.08 so I2C can use the OLED pins */
-    uart0_default: uart0_default {
-        group1 {
-            psels = <NRF_PSEL(UART_RX, 0, 2)>;
-            bias-pull-up;
-        };
-        group2 {
-            psels = <NRF_PSEL(UART_TX, 0, 3)>;
-        };
-    };
-
-    uart0_sleep: uart0_sleep {
-        group1 {
-            psels = <NRF_PSEL(UART_RX, 0, 2)>,
-                    <NRF_PSEL(UART_TX, 0, 3)>;
-            low-power-enable;
-        };
-    };
-
-    /* OLED I2C on D0/D1 footprint holes (PD0=SCL, PD1=SDA) */
-    i2c0_default: i2c0_default {
-        group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 0, 6)>,
-                    <NRF_PSEL(TWIM_SCL, 0, 8)>;
-        };
-    };
-
-    i2c0_sleep: i2c0_sleep {
-        group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 0, 6)>,
-                    <NRF_PSEL(TWIM_SCL, 0, 8)>;
-            low-power-enable;
-        };
-    };
-};
-
-&uart0 {
-    status = "disabled";
-};
-
-&spi1 {
-    status = "disabled";
-};
-
-&i2c0 {
-    status = "okay";
-};
-*/
-
 / {
     chosen {
         zephyr,display = &oled;
