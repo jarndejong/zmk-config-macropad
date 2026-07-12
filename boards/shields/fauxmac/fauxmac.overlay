@@ -1,11 +1,33 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 #include <dt-bindings/gpio/gpio.h>
-#include <dt-bindings/pinctrl/nrf-pinctrl.h>
 
+/*
+ * Pin map (confirmed by your testing):
+ *
+ *   Matrix rows:  pm 5, 4, 1, 0  (rows 0–3) — your working key pins
+ *   Matrix cols:  pm 19, 20, 21
+ *   Encoder:      pm 14, 16
+ *   OLED I2C:     nice!nano defaults P0.17 (SDA) / P0.20 (SCL) = pm 2/3
+ *
+ *   Rows 2/3 (pm 0/1) do NOT conflict with OLED (pm 2/3). No pin juggling needed.
+ *
+ *   Display orientation: fauxmac mounts the 128×32 OLED vertically (QMK uses
+ *   270° rotation). ZMK only supports hardware flip via segment-remap / com-invdir.
+ *   If the image looks wrong, try the alternate oled property blocks below.
+ */
+
+&uart0 {
+    status = "disabled";
+};
+
+&spi1 {
+    status = "disabled";
+};
 
 / {
     chosen {
         zephyr,display = &oled;
+        zmk,kscan = &kscan0;
         zmk,matrix-transform = &default_transform;
     };
 
@@ -20,7 +42,7 @@
             RC(3,0) RC(3,1) RC(3,2)
         >;
     };
-/*
+
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
         diode-direction = "col2row";
@@ -41,7 +63,7 @@
             , <&pro_micro 21 GPIO_ACTIVE_HIGH>
             ;
     };
-*/
+
     left_encoder: encoder {
         compatible = "alps,ec11";
         a-gpios = <&pro_micro 14 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
@@ -69,8 +91,20 @@
         page-offset = <0>;
         display-offset = <0>;
         multiplex-ratio = <31>;
+        /* Active: matches murphpad / knob_goblin — try alternates below if skewed */
         segment-remap;
         com-invdir;
+        com-sequential;
+        inversion-on;
         prechargep = <0x22>;
+
+        /* Alt A — 180° flip: comment out active flags above, use:
+        segment-remap;
+        prechargep = <0x22>;
+        */
+
+        /* Alt B — no remap: comment out active flags above, use only:
+        prechargep = <0x22>;
+        */
     };
 };
