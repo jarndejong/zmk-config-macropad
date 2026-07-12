@@ -3,24 +3,47 @@
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
 
 /*
- * Fauxmac pin map (silkscreen, USB up, chip facing you):
+ * Fauxmac / nice!nano pin reference (from PCB + your working key tests):
  *
- *   RIGHT column (bottom → top):
- *     D3 → row 3    pro_micro 0   (P0.08)  ← OLED SCL (PD0)
- *     D2 → row 2    pro_micro 1   (P0.06)  ← OLED SDA (PD1)
- *     D4 → row 1    pro_micro 4   (P0.22)
- *     C6 → row 0    pro_micro 5   (P0.24)
+ *   Signal          QMK/PCB    pro_micro    nRF GPIO
+ *   row 0           C6         5            P0.24
+ *   row 1           D4         4            P0.22
+ *   row 2           D2         1            P0.06  (D1 footprint hole)
+ *   row 3           D3         0            P0.08  (D0 footprint hole)
+ *   OLED SDA        PD1        1            P0.06  same as row 2
+ *   OLED SCL        PD0        0            P0.08  same as row 3
  *
- *   OLED I2C: SDA = P0.06, SCL = P0.08 (D1/D0 holes on PCB).
- *   Rows 2/3 and OLED share pro_micro 0/1 — cannot both work at once.
+ *   Rows 2/3 and OLED share pro_micro 0/1 — only one can use those pins.
  *
- *   ACTIVE below: all 12 keys (rows 2/3 on pm 0/1). OLED will not work.
+ *   Pick ONE row-gpios block below (comment out the other).
  *
- *   To test OLED: comment out ACTIVE block, uncomment OLED TEST block.
- *   OLED test frees pm 0/1 by moving rows 2/3 to pm 6/7 (bottom row dies).
+ *   A) ALL KEYS (default) — rows 2/3 on pm 0/1, OLED off
+ *   B) OLED TEST — rows 2/3 on pm 6/7, matrix freed from I2C pins
+ *   C) TRY BOTH — rows 2/3 on pm 2/3 (standard QMK D2/D3 holes), OLED on pm 0/1
+ *      Test if bottom row still works; if yes, this gives keys + OLED together.
  */
 
 &pinctrl {
+    /* Move UART off P0.06/P0.08 so I2C can use the OLED pins */
+    uart0_default: uart0_default {
+        group1 {
+            psels = <NRF_PSEL(UART_RX, 0, 2)>;
+            bias-pull-up;
+        };
+        group2 {
+            psels = <NRF_PSEL(UART_TX, 0, 3)>;
+        };
+    };
+
+    uart0_sleep: uart0_sleep {
+        group1 {
+            psels = <NRF_PSEL(UART_RX, 0, 2)>,
+                    <NRF_PSEL(UART_TX, 0, 3)>;
+            low-power-enable;
+        };
+    };
+
+    /* OLED I2C on D0/D1 footprint holes (PD0=SCL, PD1=SDA) */
     i2c0_default: i2c0_default {
         group1 {
             psels = <NRF_PSEL(TWIM_SDA, 0, 6)>,
@@ -43,6 +66,10 @@
 
 &spi1 {
     status = "disabled";
+};
+
+&i2c0 {
+    status = "okay";
 };
 
 / {
@@ -71,22 +98,31 @@
         debounce-press-ms = <10>;
         debounce-release-ms = <10>;
 
-        /* ACTIVE — all keys working (OLED blocked by pin conflict) 
+        /* A) ALL KEYS — your working mapping */
         row-gpios
             = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
-        */
 
-        /* OLED TEST — comment out ACTIVE above, uncomment this block: */
+        /* B) OLED TEST — comment out A, uncomment this:
         row-gpios
             = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
+        */
+
+        /* C) TRY KEYS + OLED — comment out A, uncomment this:
+        row-gpios
+            = <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            ;
+        */
 
         /* Cols: PF6, PF5, PF4 */
         col-gpios
@@ -126,7 +162,6 @@
         segment-remap;
         com-invdir;
         com-sequential;
-        inversion-on;
         prechargep = <0x22>;
     };
 };
