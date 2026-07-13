@@ -12,7 +12,7 @@
                 &kp C_PREV        &kp C_PP        &kp C_NEXT
                 &kp LG(Z)         &kp LG(LS(Z))   &kp LA(UP)
                 &kp LG(C)         &kp LG(V)       &kp LA(DOWN)
-                &to 1             &kp LG(S)       &kp LC(MINUS)
+                &to 1             &kp LG(S)       &kp ENTER
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
@@ -20,10 +20,10 @@
         dev_layer {
             display-name = "DEV";
             bindings = <
-                &kp LC(GRAVE)     &kp LG(P)         &kp LG(LS(P))
                 &kp LC(LA(L))     &kp LC(LA(T))     &kp LC(LA(P))
-                &kp LS(LA(F))     &kp LS(LG(M))     &kp LC(LS(MINUS))
-                &tog 0            &kp LS(F8)            &kp LC(MINUS)
+                &kp LC(LS(MINUS)) &kp LC(GRAVE)     &kp UP
+                &kp LC(MINUS)     &kp LG(B)         &kp DOWN 
+                &to 0             &kp ESC           &kp ENTER
             >;
 
             sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
