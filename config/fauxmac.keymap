@@ -25,19 +25,17 @@
                 &kp LC(MINUS)     &kp LG(B)         &kp DOWN 
                 &to 0             &mo 2             &kp ENTER
             >;
-
             sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
         };
 
-        bt_layer {
-            display-name = "BT-SEL";
+        dev_layer {
+            display-name = "DEV";
             bindings = <
                 &trans          &trans          &trans
                 &trans          &trans          &trans
                 &bt BT_SEL 0    &bt BT_SEL 1    &bt BT_SEL 2
-                &to 0           &trans          &bt BT_CLR
+                &to 0           &trans           &bt BT_CLR
             >;
-
             sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
         };
     };
