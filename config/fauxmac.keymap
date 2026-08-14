@@ -28,8 +28,8 @@
             sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
         };
 
-        dev_layer {
-            display-name = "DEV";
+        BT_layer {
+            display-name = "BT-Select";
             bindings = <
                 &trans          &trans          &trans
                 &trans          &trans          &trans
