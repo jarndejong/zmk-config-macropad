@@ -93,7 +93,7 @@
         multiplex-ratio = <31>;
         /* Active: matches murphpad / knob_goblin — try alternates below if skewed  */
         segment-remap;
-        com-invdir;
+        /* com-invdir; */
         com-sequential;
         inversion-on;
         prechargep = <0x22>;
