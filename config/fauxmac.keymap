@@ -7,13 +7,13 @@
         compatible = "zmk,keymap";
 
 
-        media_layer {
-            display-name = "MEDIA";
+        base_layer {
+            display-name = "BASE";
             bindings = <
                 &kp C_PREV          &kp LG(Z)           &kp LG(C)
                 &kp C_PP            &kp LG(LS(Z))       &kp LA(UP)
                 &kp C_NEXT          &kp LG(V)           &kp LA(DOWN)
-                &to 1               &kp LG(S)           kp ENTER
+                &to 1               &kp LA(DOWN)LG(S)   &kp LA(UP)
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
