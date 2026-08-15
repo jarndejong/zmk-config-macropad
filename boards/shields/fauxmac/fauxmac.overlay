@@ -94,8 +94,8 @@
         /* Active: matches murphpad / knob_goblin — try alternates below if skewed  */
         segment-remap;
         /* com-invdir; */
+        /* inversion-on; */
         com-sequential;
-        inversion-on;
         prechargep = <0x22>;
     };
 };
